@@ -67,3 +67,43 @@ export const deleteTheDoc = async (docId, token) => {
         return {status: 500, message: error.message}
     }
 }
+
+export const addCollaboratorToDoc = async (docId, collaboratorEmail, token) => {
+
+    try{
+        const res = await fetch(`${API}/documents/add-collaborator/${docId}`, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                collaboratorEmail: collaboratorEmail
+            })
+        });
+
+        const data = await res.json();
+
+        return {status: res.status, data, message: data.message};
+    }catch(error){
+        console.log(error);
+        return {status: 500, message: error.message}
+    }
+}
+
+export const getAllCollaborators = async (docId, token) => {
+    try{
+        const res = await fetch(`${API}/documents/get-all-collaborators/${docId}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await res.json();
+        return {status: res.status, data, message: data.message};
+    }catch(error){
+        console.log(error);
+        return {status: 500, message: error.message}
+    }
+}

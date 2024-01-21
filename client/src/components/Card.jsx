@@ -1,9 +1,11 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import Modal from './Modal';
+import { useSupplier } from '../context/supplierContext';
 
 const Card = ({ cardData, deleteEvent }) => {
     const navigate = useNavigate();
+    const {setCurrentDoc} = useSupplier();
     return (
         <>
             <div className="card" style={{ width: '18rem' }}>
@@ -12,7 +14,7 @@ const Card = ({ cardData, deleteEvent }) => {
                     <h6 className="card-subtitle mb-2 text-body-secondary">{cardData?.createdAt}</h6>
                     <p className="card-text">{cardData?.content}</p>
                     <button className="btn btn-danger me-4" data-bs-toggle="modal" data-bs-target={`#${"deleteDoc"+cardData?._id}`}>Delete</button>
-                    <button href="#" onClick={() => navigate(`/edit/${cardData._id}`)} className="btn btn-success">Edit</button>
+                    <button href="#" onClick={() => {navigate(`/edit/${cardData._id}`); setCurrentDoc(cardData)}} className="btn btn-success">Edit</button>
                 </div>
             </div>
 

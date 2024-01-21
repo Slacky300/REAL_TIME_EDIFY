@@ -1,10 +1,15 @@
 import { createContext, useContext, useState } from 'react';
+import { io } from 'socket.io-client';
+
 
 const SupplierContext = createContext();
 
 export const SupplierProvider = ({ children }) => {
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentDoc, setCurrentDoc] = useState(null);
+
+  const socket = io(import.meta.env.VITE_APP_SOCKET_URL);
 
   const triggerUpdate = () => {
     setShouldUpdate(prev => !prev);
@@ -12,7 +17,7 @@ export const SupplierProvider = ({ children }) => {
 
 
   return (
-    <SupplierContext.Provider value={{ shouldUpdate, triggerUpdate, loading, setLoading}}>
+    <SupplierContext.Provider value={{ shouldUpdate, triggerUpdate, loading, setLoading, currentDoc, setCurrentDoc, socket}}>
       {children}
     </SupplierContext.Provider>
   );

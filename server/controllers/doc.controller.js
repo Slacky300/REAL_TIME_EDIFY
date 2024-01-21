@@ -43,6 +43,18 @@ export const getSingleUserDocument = async (req, res) => {
 
 }
 
+export const getDocThroughSocket = async (id) => {
+    
+        try {
+            const document = await DocumentModel.findById(id);
+            console.log(document);
+            return document;
+        } catch (error) {
+            console.log(error);
+        }
+
+}
+
 export const updateDocument = async (req, res) => {
 
     const { documentId } = req.params;

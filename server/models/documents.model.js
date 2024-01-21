@@ -11,7 +11,7 @@ const DocumentSchema = new mongoose.Schema({
     },
 
     content: {
-        type: String,
+        type: Object,
     },
 
     owner: {

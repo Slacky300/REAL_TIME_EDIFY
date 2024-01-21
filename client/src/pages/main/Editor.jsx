@@ -15,6 +15,8 @@ const Editor = () => {
         editor.style.maxHeight = '80em';
         wrapper.append(editor)
         const q = new Quill(editor, { theme: 'snow' })
+        q.disable();
+        q.setText('Loading...')
         setQuill(q);
     }, [])
 

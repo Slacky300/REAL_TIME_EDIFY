@@ -106,6 +106,42 @@ const EditDocument = () => {
         };
     }, [currentDoc, auth?.user?.username]);
 
+    useEffect(() => {
+        if(quill == null) return;
+
+        
+        socket.once('load-document', document => {
+            quill.setContents(document);
+            quill.enable();
+
+        })
+
+
+        socket.emit("get-doc",{ docId: currentDoc?._id}, (error) => {
+            if (error) {
+                console.error('Error leaving room:', error);    
+            }
+        })
+        
+    
+    },[quill, currentDoc])
+
+    useEffect(() => {
+        if (quill == null) return
+    
+        const interval = setInterval(() => {
+            toast.info('Saving document...')
+          socket.emit("save-doc", { docId: currentDoc?._id, data: quill?.getContents() }, (error) => {
+            if (error) {
+              console.error(error)
+            }
+          })
+        }, 70000)
+    
+        return () => {
+          clearInterval(interval)
+        }
+      }, [quill])
 
     useEffect(() => {
         if(quill == null) return;
@@ -126,6 +162,7 @@ const EditDocument = () => {
         if(quill == null) return;
         const handler = (delta, oldDelta, source) => {
             if (source !== 'user') return
+
             socket.emit('send-changes', { delta, roomId: currentDoc?._id, username: auth?.user?.username },(error) => {
                 if (error) {
                     console.error('Error leaving room:', error);

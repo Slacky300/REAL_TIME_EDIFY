@@ -24,7 +24,6 @@ export const getAllRespectedUserDocuments = async (req, res) => {
                 { collaborators: { $elemMatch: { $eq: req.user.id } } }
             ]
         }).populate("owner", "username").populate("collaborators", "username");
-        console.log(documents);
         res.status(200).json({ documents, message: `All documents fetched successfully` });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -92,7 +91,7 @@ export const addCollaborator = async (req, res) => {
 
     try {
         const { documentId } = req.params;
-        const { collaboratorId } = req.body;
+        const { collaboratorEmail } = req.body;
 
         const doesDocumentExist = await DocumentModel.findById(documentId);
 
@@ -100,16 +99,36 @@ export const addCollaborator = async (req, res) => {
 
         if (doesDocumentExist.owner.toString() !== req.user.id) return res.status(401).json({ message: `You are not authorized to add collaborator to this document` });
 
-        const doesCollaboratorExist = await User.findById(collaboratorId);
+        const doesCollaboratorExist = await User.findOne({ email: collaboratorEmail });
+        if (!doesCollaboratorExist) return res.status(404).json({ message: `Collaborator with email : ${collaboratorEmail} doesn't exist` });
 
-        if (!doesCollaboratorExist) return res.status(404).json({ message: `Collaborator with id : ${collaboratorId} doesn't exist` });
+        if (doesDocumentExist.owner.toString() === doesCollaboratorExist._id.toString()) return res.status(400).json({ message: `${collaboratorEmail} is the owner of this document` });
 
-        if (doesDocumentExist.collaborators.includes(collaboratorId)) return res.status(400).json({ message: `Collaborator with id : ${collaboratorId} already exists` });
 
-        const updatedDocument = await DocumentModel.findByIdAndUpdate(documentId, { $push: { collaborators: collaboratorId } }, { new: true });
+        if (doesDocumentExist.collaborators.includes(doesCollaboratorExist._id)) return res.status(400).json({ message: `${collaboratorEmail} is already a collaborator` });
+
+        doesDocumentExist.collaborators.push(doesCollaboratorExist._id);
+        const updatedDocument = await doesDocumentExist.save();
 
         res.status(200).json({ document: updatedDocument, message: `Sucssesfully added ${doesCollaboratorExist.username} as a collaborator` });
     } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
+export const getAllCollaborators = async (req, res) => {
+
+    try{
+        const { documentId } = req.params;
+
+        const doesDocumentExist = await DocumentModel.findById(documentId).populate("collaborators", "username");
+
+        if (!doesDocumentExist) return res.status(404).json({ message: `Document with id : ${documentId} doesn't exist` });
+
+
+        res.status(200).json({ collaborators: doesDocumentExist.collaborators, message: `All collaborators fetched successfully` });
+    }catch(error){
         res.status(500).json({ message: error.message });
     }
 }

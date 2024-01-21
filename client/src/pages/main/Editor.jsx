@@ -1,8 +1,11 @@
 import React, { useCallback } from 'react'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
+import { useSupplier } from '../../context/supplierContext'
 
 const Editor = () => {
+
+    const {setQuill} = useSupplier();
     
     const wrapperRef = useCallback(wrapper => {
         if (wrapper == null) return
@@ -11,7 +14,8 @@ const Editor = () => {
         editor.style.minHeight = '30em';
         editor.style.maxHeight = '80em';
         wrapper.append(editor)
-        new Quill(editor, { theme: 'snow' })
+        const q = new Quill(editor, { theme: 'snow' })
+        setQuill(q);
     }, [])
 
   return (

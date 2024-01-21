@@ -8,6 +8,7 @@ export const SupplierProvider = ({ children }) => {
   const [shouldUpdate, setShouldUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentDoc, setCurrentDoc] = useState(null);
+  const [quill, setQuill] = useState(null); 
 
   const socket = io(import.meta.env.VITE_APP_SOCKET_URL);
 
@@ -17,7 +18,7 @@ export const SupplierProvider = ({ children }) => {
 
 
   return (
-    <SupplierContext.Provider value={{ shouldUpdate, triggerUpdate, loading, setLoading, currentDoc, setCurrentDoc, socket}}>
+    <SupplierContext.Provider value={{ shouldUpdate, triggerUpdate, loading, quill, setQuill, setLoading, currentDoc, setCurrentDoc, socket}}>
       {children}
     </SupplierContext.Provider>
   );

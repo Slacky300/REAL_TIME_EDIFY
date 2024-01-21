@@ -9,12 +9,15 @@ import { API } from '../../helpers/config';
 import Editor from './Editor';
 
 const EditDocument = () => {
+
+    const [currentUsers, setCurrentUsers] = useState([]); 
     const navigate = useNavigate();
     const { auth } = useAuth();
     const { currentDoc, loading, socket, setCurrentDoc, shouldUpdate, triggerUpdate, setLoading } = useSupplier();
     const [collaboratorEmail, setCollaboratorEmail] = useState('');
     const [collaborators, setCollaborators] = useState([]);
     const { id } = useParams();
+
 
     const handleAddCollaborator = async () => {
         setLoading(true);
@@ -62,14 +65,18 @@ const EditDocument = () => {
     useEffect(() => {
         const handleSomeoneJoined = (data) => {
             if (data?.username !== auth?.user?.username) {
+                
                 toast.success(`${data?.username} joined the document`);
             }
+            setCurrentUsers(data?.roomUsers);
         };
 
         const handleSomeoneLeft = (data) => {
             if (data?.username !== auth?.user?.username) {
                 toast.error(`${data?.username} left the document`);
             }
+            setCurrentUsers(data?.roomUsers);
+
         };
 
         if (currentDoc?._id) {
@@ -100,6 +107,7 @@ const EditDocument = () => {
     }, [currentDoc, auth?.user?.username]);
 
 
+
     return (
         <div className='container my-4'>
             <div className='row d-flex'>
@@ -119,8 +127,8 @@ const EditDocument = () => {
             <div className='row d-flex justify-content-center align-items-center'>
                 <div className='col-md-2'>
                     <ul className="list-group">
-                        {collaborators?.map((collaborator, index) => (
-                            <li key={index} className="list-group-item">{collaborator?.username}</li>
+                        {currentUsers?.map((user, index) => (
+                            <li key={index} className="list-group-item">{user?.username}</li>
                         ))}
                     </ul>
                 </div>

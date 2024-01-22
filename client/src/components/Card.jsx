@@ -8,10 +8,10 @@ const Card = ({ cardData, deleteEvent }) => {
     const {setCurrentDoc} = useSupplier();
     return (
         <>
-            <div className="card" style={{ width: '18rem' }}>
+            <div className="card bg-secondary text-light" style={{ width: '18rem' }}>
                 <div className="card-body">
                     <h5 className="card-title">{cardData?.title}</h5>
-                    <h6 className="card-subtitle mb-2 text-body-secondary">{cardData?.createdAt}</h6>
+                    <h6 className="card-subtitle mb-2 text-body">Owner: {cardData?.owner?.username} || {cardData?.createdAt?.split('T')[0]}</h6>
                     <p className="card-text">{cardData?.content?.ops[0]?.insert}</p>
                     <button className="btn btn-danger me-4" data-bs-toggle="modal" data-bs-target={`#${"deleteDoc"+cardData?._id}`}>Delete</button>
                     <button href="#" onClick={() => {navigate(`/edit/${cardData._id}`); setCurrentDoc(cardData)}} className="btn btn-success">Edit</button>

@@ -61,7 +61,7 @@ const Register = () => {
                 </div>
                 <div className="row my-5 d-flex justify-content-center align-items-center" >
                     <div className="col-md-6">
-                        <form onSubmit={handleSubmit} className='form-control'>
+                        <form onSubmit={handleSubmit} className='form-control bg-dark text-light'>
                             <div className="form-group">
                                 <label htmlFor="username">Username</label>
                                 <input

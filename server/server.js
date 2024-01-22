@@ -23,9 +23,10 @@ const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
     origin: '*',
+    methods: ['GET', 'POST']
   },
 });
-socketCtrl(io);
+socketCtrl(io); 
 
 
 app.use(express.json());

@@ -33,6 +33,8 @@ const handleConnection = async (socket, io, userId) => {
     }
   });
 
+
+
   socket.on('leaveRoom', (data, callback) => {
     try {
       socket.leave(data.roomId);
@@ -65,24 +67,26 @@ const handleConnection = async (socket, io, userId) => {
   });
 
 
-  socket.on('get-doc', async (data, callback) => {
+  socket.on('get-doc', async (data) => {
     try {
+      
       const curr_doc = await getDocThroughSocket(data.docId);
       let content = curr_doc.content;
 
-      if (!content) {
+      if (!content) { 
         content = '';
       }
 
-      io.emit('load-document', content);
-      callback(null);
+      io.to(data.docId).emit('load-document', content);
     } catch (error) {
       console.error('Error in get-doc:', error);
-      callback('Error sending doc');
     }
    
 
   });
+  
+ 
+
 
 
  

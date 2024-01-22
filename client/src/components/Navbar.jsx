@@ -20,10 +20,11 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg bg-dark">
         <div className="container-fluid">
-          <NavLink className="navbar-brand" to="/">
-            Google Auth MERN
+          <NavLink className="navbar-brand text-light" to="/">
+            RealTimeEdify
+
           </NavLink>
           <button
             className="navbar-toggler"
@@ -37,7 +38,7 @@ const Navbar = () => {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
+            <ul className="navbar-nav ms-auto text-light">
               {auth.user ? (
                 <>
                   <li className="nav-item">
@@ -53,7 +54,7 @@ const Navbar = () => {
                 <>
                   <li className="nav-item">
                     <NavLink
-                      className="nav-link"
+                      className="nav-link text-light"
                       to="/"
                       activeclassname="active"
                     >
@@ -62,7 +63,7 @@ const Navbar = () => {
                   </li>
                   <li className="nav-item">
                     <NavLink
-                      className="nav-link"
+                      className="nav-link text-light"
                       to="/register"
                       activeclassname="active"
                     >

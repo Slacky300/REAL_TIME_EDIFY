@@ -10,10 +10,7 @@ const DocumentSchema = new mongoose.Schema({
         unique: true
     },
 
-    content: {
-        type: Object,
-    },
-
+    content: Object,
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"

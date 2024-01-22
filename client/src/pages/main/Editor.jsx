@@ -13,6 +13,10 @@ const Editor = () => {
         const editor = document.createElement('div');
         editor.style.minHeight = '30em';
         editor.style.maxHeight = '80em';
+        editor.classList.add('bg-dark');
+        editor.classList.add('text-white');
+        editor.style.color = 'white';
+        editor.style.borderRadius = '10px';
         wrapper.append(editor)
         const q = new Quill(editor, { theme: 'snow' })
         q.disable();

@@ -95,7 +95,7 @@ const DocumentHome = () => {
             </div>
 
             <Modal title={"Create New Document"} modalId={"createDoc"} content={
-                <form className='form-control' onSubmit={handleAdd}>
+                <form className='form-control bg-dark text-light' onSubmit={handleAdd}>
                     <div className="mb-3">
                         
                         <label htmlFor="title" className="htmlForm-label my-2">Title</label>

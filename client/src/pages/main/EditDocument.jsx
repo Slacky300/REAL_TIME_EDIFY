@@ -10,13 +10,16 @@ import Editor from './Editor';
 
 const EditDocument = () => {
 
-    const [currentUsers, setCurrentUsers] = useState([]); 
+    const [currentUsers, setCurrentUsers] = useState([]);
     const navigate = useNavigate();
     const { auth } = useAuth();
-    const { currentDoc, loading, socket, setCurrentDoc, shouldUpdate, triggerUpdate,quill, setLoading } = useSupplier();
+    const { currentDoc, loading, socket, setCurrentDoc, shouldUpdate, triggerUpdate, quill, setLoading } = useSupplier();
     const [collaboratorEmail, setCollaboratorEmail] = useState('');
     const [collaborators, setCollaborators] = useState([]);
     const { id } = useParams();
+
+
+
 
 
     const handleAddCollaborator = async () => {
@@ -65,7 +68,7 @@ const EditDocument = () => {
     useEffect(() => {
         const handleSomeoneJoined = (data) => {
             if (data?.username !== auth?.user?.username) {
-                
+
                 toast.success(`${data?.username} joined the document`);
             }
             setCurrentUsers(data?.roomUsers);
@@ -80,7 +83,7 @@ const EditDocument = () => {
         };
 
         if (currentDoc?._id) {
-            socket.emit('joinRoom', { roomId:currentDoc?._id, username: auth?.user?.username}, (error) => {
+            socket.emit('joinRoom', { roomId: currentDoc?._id, username: auth?.user?.username }, (error) => {
                 if (error) {
                     console.error('Error joining room:', error);
                 }
@@ -97,7 +100,7 @@ const EditDocument = () => {
                 socket.emit('leaveRoom', { roomId: currentDoc?._id, username: auth?.user?.username }, (error) => {
                     if (error) {
                         console.error('Error leaving room:', error);
-                        
+
                     }
                 });
                 socket.off('someoneJoined', handleSomeoneJoined);
@@ -107,68 +110,73 @@ const EditDocument = () => {
     }, [currentDoc, auth?.user?.username]);
 
     useEffect(() => {
-        if(quill == null) return;
-
-        
-        socket.once('load-document', document => {
-            quill.setContents(document);
-            quill.enable();
-
-        })
+        if (quill == null) return;
 
 
-        socket.emit("get-doc",{ docId: currentDoc?._id}, (error) => {
-            if (error) {
-                console.error('Error leaving room:', error);    
-            }
-        })
-        
-    
-    },[quill, currentDoc])
+        if (currentDoc) {
+            socket.once('load-document', document => {
+                quill.setContents(document);
+                quill.enable();
+            })
+
+
+            socket.emit("get-doc", { docId: currentDoc._id }, (error) => {
+                if (error) {
+                    console.error('Error leaving room:', error);
+                }
+            })
+        }
+
+
+    }, [quill, currentUsers, currentDoc])
 
     useEffect(() => {
         if (quill == null) return
-    
+
         const interval = setInterval(() => {
             toast.info('Saving document...')
-          socket.emit("save-doc", { docId: currentDoc?._id, data: quill?.getContents() }, (error) => {
-            if (error) {
-              console.error(error)
-            }
-          })
+            socket.emit("save-doc", { docId: currentDoc?._id, data: quill?.getContents() }, (error) => {
+                if (error) {
+                    console.error(error)
+                }
+            })
         }, 70000)
-    
+
         return () => {
-          clearInterval(interval)
+            clearInterval(interval)
         }
-      }, [quill])
+    }, [quill])
 
     useEffect(() => {
-        if(quill == null) return;
+        if (quill == null || !auth?.user?.username) return;
+
         const handler = (delta) => {
-           if(delta?.username !== auth?.user?.username){
-                quill.updateContents(delta?.delta);  
-           }
-           return;
+            if (delta.username !== auth?.user?.username) {
+
+                
+                quill.updateContents(delta.delta);
+
+ 
+
+            } 
+
+            return;
         }
-        socket.on('receive-changes', handler)
+        socket.on('receive-changes', (data) => {
+            handler(data);
+        });
+
         return () => {
             socket.off('receive-changes', handler)
         }
-    },[quill])
+    }, [quill])
 
 
     useEffect(() => {
-        if(quill == null) return;
+        if (quill == null) return;
         const handler = (delta, oldDelta, source) => {
             if (source !== 'user') return
-
-            socket.emit('send-changes', { delta, roomId: currentDoc?._id, username: auth?.user?.username },(error) => {
-                if (error) {
-                    console.error('Error leaving room:', error);
-                    
-                }
-            })
+            socket.emit('send-changes', { delta, roomId: currentDoc._id, username: auth?.user?.username });
         }
         quill.on('text-change', handler)
         return () => {
@@ -176,7 +184,6 @@ const EditDocument = () => {
         }
     }, [quill]);
 
-    
 
 
     return (

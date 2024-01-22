@@ -47,7 +47,6 @@ export const getDocThroughSocket = async (id) => {
     
         try {
             const document = await DocumentModel.findById(id);
-            console.log(document);
             return document;
         } catch (error) {
             console.log(error);

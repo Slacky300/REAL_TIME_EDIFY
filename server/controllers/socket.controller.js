@@ -55,24 +55,26 @@ const handleConnection = async (socket, io, userId) => {
     }
   });
 
+  socket.on('send-changes', (data, callback) => {
+    try {
+      io.to(data.roomId).emit('receive-changes', { delta: data.delta, username: data.username })
+    } catch (error) {
+      console.error('Error in send-changes:', error);
+      callback('Error sending changes');
+    } 
+  });
 
 
   socket.on('get-doc', async (data, callback) => {
     try {
-      const curr_doc = await getDocThroughSocket(data?.docId);
+      const curr_doc = await getDocThroughSocket(data.docId);
+      let content = curr_doc.content;
 
-      io.emit('load-document', curr_doc?.content);
+      if (!content) {
+        content = '';
+      }
 
-      socket.on('send-changes', (data, callback) => {
-        try {
-          io.to(data.roomId).emit('receive-changes', { delta: data.delta, username: data.username });
-          callback(null);
-        } catch (error) {
-          console.error('Error in send-changes:', error);
-          callback('Error sending changes');
-        }
-      });
-      
+      io.emit('load-document', content);
       callback(null);
     } catch (error) {
       console.error('Error in get-doc:', error);
@@ -81,6 +83,10 @@ const handleConnection = async (socket, io, userId) => {
    
 
   });
+
+
+ 
+  
   
   socket.on('save-doc', async (data, callback) => {
     try {

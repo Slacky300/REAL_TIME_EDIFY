@@ -161,9 +161,7 @@ const EditDocument = () => {
         };
 
         const handleSomeoneLeft = (data) => {
-            if (data?.username !== auth?.user?.username) {
-                toast.error(`${data?.username} left the document`);
-            }
+           
             setCurrentUsers(data?.roomUsers);
 
         };

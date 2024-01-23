@@ -53,7 +53,6 @@ const EditDocument = () => {
 
 
             quill.setContents(document);
-            toast.success('Document loaded');
 
 
             quill.enable();
@@ -157,10 +156,7 @@ const EditDocument = () => {
 
         if (quill == null || !currentDoc?._id) return
         const handleSomeoneJoined = (data) => {
-            if (data?.username !== auth?.user?.username) {
-
-                toast.success(`${data?.username} joined the document`);
-            }
+            
             setCurrentUsers(data?.roomUsers);
         };
 

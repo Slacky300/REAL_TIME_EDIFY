@@ -66,5 +66,6 @@ Follow these steps to run RealTimeEdify locally:
   npm run dev
   cd ../client
   npm run dev
+  ```
 
 5. **Access the application in your browser at http://localhost:5173.**

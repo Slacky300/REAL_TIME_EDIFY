@@ -15,7 +15,7 @@ export const register = async (req, res) => {
         if(doesUsernameExists) return res.status(400).json({message: `Username ${username} already exists`});
         const hashedPassword = await bcrypt.hash(password, 12);
         const verificationToken = generateverificationToken(email);
-        //await sendVerificationEmail(email.toLowerCase(), verificationToken, username);
+        await sendVerificationEmail(email.toLowerCase(), verificationToken, username);
         const result = await User.create({email, password: hashedPassword, username, verificationToken});
         res.status(201).json({user: result, message: `Verification email has been sent to ${email}`});
     }catch(error){
@@ -54,7 +54,7 @@ export const login = async (req, res) => {
         const {email, password} = req.body;
         const existingUser = await User.findOne({email});
         if(!existingUser) return res.status(404).json({message: "User doesn't exist"});
-        //if(!existingUser.isVerified) return res.status(400).json({message: `Please verify your ${email} first`});
+        if(!existingUser.isVerified) return res.status(400).json({message: `Please verify your ${email} first`});
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
         if(!isPasswordCorrect) return res.status(400).json({message: "Invalid credentials"});
         const token = jwt.sign({email: existingUser.email, id: existingUser._id}, process.env.JWT_SECRET, {expiresIn: "1h"});

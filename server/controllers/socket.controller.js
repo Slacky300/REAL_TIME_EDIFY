@@ -18,7 +18,7 @@ const handleConnection = async (socket, io, userId) => {
         roomUsers[data.roomId] = [];
       }
 
-      roomUsers[data.roomId].push({ username: data.username });
+      roomUsers[data.roomId].push({ username: data.username, userId });
 
 
       io.to(data.roomId).emit('someoneJoined', {
@@ -106,4 +106,34 @@ const handleConnection = async (socket, io, userId) => {
       callback('Error saving doc');
     }
   });
+
+
+  socket.on('disconnect', () => {
+    try {
+      let username;
+      let roomId;  
+  
+      Object.keys(roomUsers).forEach((currentRoomId) => {
+        username = roomUsers[currentRoomId].find(
+          (user) => user.userId === userId
+        )?.username;
+        roomUsers[currentRoomId] = roomUsers[currentRoomId].filter(
+          (user) => user.userId !== userId
+        );
+        roomId = currentRoomId;  
+      });
+  
+     
+      if (username && roomId) {
+        socket.leave(roomId);
+        io.to(roomId).emit('someoneLeft', {
+          username,
+          roomUsers: roomUsers[roomId],
+        });
+      }
+    } catch (error) {
+      console.error('Error in disconnect:', error);
+    }
+  });
+  
 };

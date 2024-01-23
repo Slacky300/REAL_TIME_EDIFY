@@ -58,7 +58,7 @@ export const gmailContent = (verificationToken, username) => {
     <body>
       <div class="container">
         <h1>Email Verification</h1>
-        <p>Please take a moment to verify your email for Node Natter, a professional chat web app:</p>
+        <p>Please take a moment to verify your email for RealTimeEdify, Edit in Real time</p>
         <div style="text-align: center; margin-top: 20px;">
           <h2>Hello ${username},</h2>
           <p>Slacky300 appreciates your commitment to securing your account. To proceed, kindly click the button below to verify your email:</p>

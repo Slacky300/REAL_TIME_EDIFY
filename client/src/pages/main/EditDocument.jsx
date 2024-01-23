@@ -30,6 +30,7 @@ const EditDocument = () => {
             document.getElementById('closeTheModal').click();
             toast.success(res?.data?.message);
             triggerUpdate();
+            return;
         }
 
         toast.error(res?.data?.message);

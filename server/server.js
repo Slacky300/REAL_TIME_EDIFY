@@ -2,7 +2,7 @@ import express from 'express';
 import { Server } from 'socket.io';
 import { socketCtrl } from './controllers/socket.controller.js';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import path, { dirname } from 'path';
 import userRouter from './routes/user.routes.js';
 import documentRouter from './routes/document.routes.js';
 import dbConnect from './utils/dbConnect.js';
@@ -18,6 +18,8 @@ const server = app.listen(PORT, async () => {
   await dbConnect();
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 const io = new Server(server, {
   pingTimeout: 60000,

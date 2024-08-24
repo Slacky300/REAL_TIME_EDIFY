@@ -29,7 +29,7 @@ export const login = async (user) => {
 
         const { email, password } = user;
 
-        const res = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/users/login`, {
+        const res = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL || '/api/v1' }/users/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,7 +56,7 @@ export const register = async (user) => {
 
         const { username, email, password } = user;
 
-        const res = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/users/register`, {
+        const res = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL || '/api/v1' }/users/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

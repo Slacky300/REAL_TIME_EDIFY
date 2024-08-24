@@ -55,22 +55,64 @@ Follow these steps to run RealTimeEdify locally:
    git clone https://github.com/your-username/RealTimeEdify.git
    cd RealTimeEdify
    ```
-2. **Install dependencies:**
+2. **Install dependencies for frontend:**
 
   ```bash
    cd client
    npm i
+  ```
+3. **Install dependencies for backend:**
+
+  ```bash
    cd ../server
    npm i
   ```
-3. **Set up your MongoDB database and update the connection string in the server's .env file.**
 
-4. **Run the application**
+3. **Set up .env variables by creating a .env file in the server directory and adding the following variables:**
+
+  - For server side:
+   ```bash
+    MONGODB_URI=your_mongo_db_uri
+    JWT_SECRET=your_jwt_secret
+    PORT=8000
+    PASSWORD=your_app_password_for_email
+    EMAIL=your_gmail_email
+    BACKEND_URL=your_backend_url/api/v1
+    FRONTEND_URL=your_frontend_url
+    PRODUCTION=false
+   ```
+
+   Replace `your_mongodb_connection_string`, `your_jwt_secret`, `your_email_username`, `your_email_password`, `your_email_host`, and `your_email_port` with your own values.
+
+    **Note:** If you are using Gmail for sending emails, you need to enable "Less secure app access" in your Google account settings.
+
+  - For client side:
+   ```bash
+    VITE_APP_BACKEND_URL=your_backend_url/api/v1
+    VITE_APP_SOCKET_URL=your_backend_url
+   ```
+
+   Replace `your_backend_url` with the URL where the backend server is running.
+
+4. **Run the frontend**
   ```bash
-  cd server
-  npm run dev
-  cd ../client
-  npm run dev
+    cd client
+    npm run dev
   ```
 
-5. **Access the application in your browser at http://localhost:5173.**
+5. **Run the backend**
+  ```bash
+    cd server
+    npm run dev
+  ```
+6. **Access the application in your browser at http://localhost:5173.**
+
+7. **Create an account and start collaborating on documents!**
+
+## **Contributing**
+
+Contributions are welcome! Please refer to the [Contributing Guidelines](CONTRIBUTING.md) for more information.
+
+## **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

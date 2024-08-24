@@ -58,14 +58,15 @@ Follow these steps to run RealTimeEdify locally:
 2. **Install dependencies for frontend:**
 
   ```bash
-   cd client
-   npm i
+     cd src
+     cd client
+     npm i
   ```
 3. **Install dependencies for backend:**
 
   ```bash
-   cd ../server
-   npm i
+     cd src
+     npm i
   ```
 
 3. **Set up .env variables by creating a .env file in the server directory and adding the following variables:**
@@ -84,7 +85,7 @@ Follow these steps to run RealTimeEdify locally:
 
    Replace `your_mongodb_connection_string`, `your_jwt_secret`, `your_email_username`, `your_email_password`, `your_email_host`, and `your_email_port` with your own values.
 
-    **Note:** If you are using Gmail for sending emails, you need to enable "Less secure app access" in your Google account settings.
+  **Note:** If you are using Gmail for sending emails, you need to enable "Less secure app access" in your Google account settings.
 
   - For client side:
    ```bash
@@ -98,14 +99,12 @@ Follow these steps to run RealTimeEdify locally:
   ```bash
     cd src
     cd client
-    npm install
     npm run dev
   ```
 
 5. **Run the backend**
   ```bash
     cd src
-    npm install
     npm run dev
   ```
 6. **Access the application in your browser at http://localhost:5173.**

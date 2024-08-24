@@ -111,7 +111,7 @@ Follow these steps to run RealTimeEdify locally:
 
 ## **Contributing**
 
-Contributions are welcome! Please refer to the [Contributing Guidelines](CONTRIBUTING.md) for more information.
+Contributions are welcome! Please refer to the [Contributing Guidelines](contributing.md) for more information.
 
 ## **License**
 

@@ -37,11 +37,12 @@ app.use(cors());
 
 
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname + '../client/dist' +'index.html'));
-});
 
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/documents', documentRouter);
 
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname + '../client/dist' +'index.html'));
+});

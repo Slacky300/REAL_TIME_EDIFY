@@ -96,13 +96,16 @@ Follow these steps to run RealTimeEdify locally:
 
 4. **Run the frontend**
   ```bash
+    cd src
     cd client
+    npm install
     npm run dev
   ```
 
 5. **Run the backend**
   ```bash
-    cd server
+    cd src
+    npm install
     npm run dev
   ```
 6. **Access the application in your browser at http://localhost:5173.**

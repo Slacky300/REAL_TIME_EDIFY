@@ -19,7 +19,7 @@ const server = app.listen(PORT, async () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(express.static(path.join(__dirname, '/client/dist')));
 
 const io = new Server(server, {
   pingTimeout: 60000,
@@ -42,6 +42,8 @@ app.use(cors());
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/documents', documentRouter);
 
+
+console.log(path.join(__dirname ,'/client/dist', 'index.html'));
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname ,'../client/dist', 'index.html'));
+  res.sendFile(path.join(__dirname ,'/client/dist', 'index.html'));
 });

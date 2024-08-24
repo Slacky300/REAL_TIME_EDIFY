@@ -7,8 +7,13 @@
   "license": "ISC",
   "description": "",
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "start": "node server.js",
+    "frontend-build": "cd ../client && npm run build",
+    "build": "npm run frontend-build",
     "dev": "nodemon server.js"
   },
   "dependencies": {

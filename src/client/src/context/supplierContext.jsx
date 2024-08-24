@@ -10,7 +10,7 @@ export const SupplierProvider = ({ children }) => {
   const [currentDoc, setCurrentDoc] = useState(null);
   const [quill, setQuill] = useState(null); 
 
-  const socket = io(import.meta.env.VITE_APP_SOCKET_URL || 'https://edify.slacky.xyz') ;
+  const socket = io(import.meta.env.VITE_APP_SOCKET_URL || '/');
 
   const triggerUpdate = () => {
     setShouldUpdate(prev => !prev);

@@ -6,7 +6,7 @@ import Modal from '../../components/Modal';
 import { addCollaboratorToDoc, getAllCollaborators } from '../../helpers/docs/doc.helper';
 import { useAuth } from '../../context/authContext';
 import { API } from '../../helpers/config';
-import Editor from './Editor';
+import Editor from './Editor.jsx';
 
 const EditDocument = () => {
 

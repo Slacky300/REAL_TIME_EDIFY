@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import { getLocalStorageWithExpiry } from '../helpers/auth/auth.helper.js';
+import DarkModeButton from './DarkModeButton/DarkModeButton.jsx'
 
 const Navbar = () => {
   const token = getLocalStorageWithExpiry('auth')?.token;
@@ -52,6 +53,9 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
+                 <li className="nav-item">
+                 <DarkModeButton />
+                  </li>
                   <li className="nav-item">
                     <NavLink
                       className="nav-link text-light"

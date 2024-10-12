@@ -16,7 +16,7 @@ const EditDocument = () => {
 
     const navigate = useNavigate();
     const { auth } = useAuth();
-    const { currentDoc, loading, socket, setCurrentDoc, triggerUpdate, quill, setLoading } = useSupplier();
+    const { currentDoc, loading, socket, setCurrentDoc, darkMode, triggerUpdate, quill, setLoading } = useSupplier();
     const { id } = useParams();
 
     const handleAddCollaborator = async () => {
@@ -128,19 +128,23 @@ const EditDocument = () => {
     }, [auth, currentDoc, setCurrentDoc]);
 
     useEffect(() => {
-        if (quill == null || !currentDoc?._id) return;
-
+        if (!quill || !currentDoc?._id) return;
+    
         const handler = (delta, oldDelta, source) => {
             if (source !== 'user') return;
+            
             socket.emit('send-changes', { delta, roomId: currentDoc?._id, username: auth?.user?.username });
         };
-
+    
         quill.on('text-change', handler);
-
+    
         return () => {
-            quill.off('text-change', handler);
+            if (quill) {
+                quill.off('text-change', handler);  // Remove event listener using reference
+            }
         };
-    }, [quill, socket, currentDoc]);
+    }, [quill, socket, currentDoc, auth?.user?.username]);
+    
 
     useEffect(() => {
         if (quill == null || !currentDoc?._id) return;
@@ -179,23 +183,41 @@ const EditDocument = () => {
         };
     }, [currentDoc, socket, auth?.user?.username]);
 
+    useEffect(() => {
+        socket.on('receive-changes', (data) => {
+            if(data?.username === auth?.user?.username) return;
+            quill.updateContents(data?.delta);
+        });
+
+        return () => {
+            socket.off('receive-changes');
+        };
+    }, [currentDoc, socket]);
+
     return (
-        <div className='container my-4'>
+        <div className={`container my-4 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
             <div className='row d-flex justify-content-center align-items-center'>
                 <div className='my-3 col-lg-10 col-xl-8 d-flex justify-content-between align-items-center'>
                     <div className='d-flex align-items-center'>
-                        <button type="button" className="btn btn-warning me-2" onClick={() => navigate(-1)}>
+                        <button type="button" className={`btn btn-warning me-2 ${darkMode ? 'text-light' : ''}`} onClick={() =>{
+                            saveDocumentImmediately();
+                            navigate('/home');
+                        }}>
                             <i className="bi bi-arrow-left"></i>
                         </button>
                     </div>
                     <div className='d-flex align-items-center'>
-                        <h1 className='display-6 text-center'>Document Title: <u> {currentDoc?.title}</u>
+                        <h1 className={`display-6 text-center ${darkMode ? 'text-light' : 'text-dark'}`}>
+                            Document Title: <u> {currentDoc?.title}</u>
                             <button
                                 type="button"
                                 className='btn btn-secondary ms-5'
                                 data-bs-toggle="modal"
                                 data-bs-target={`#${"collaborators"}`}
-                            ><i class="bi bi-eye-fill"></i></button></h1>
+                            >
+                                <i className="bi bi-eye-fill"></i>
+                            </button>
+                        </h1>
                     </div>
                     <div className='d-flex align-items-center'>
                         <button
@@ -209,12 +231,12 @@ const EditDocument = () => {
                     </div>
                 </div>
                 <div className='col-md-12 col-lg-2 col-xl-4 mb-4'>
-                    <ul className="list-group">
-                        <li className="list-group-item  active" aria-current="true">
+                    <ul className={`list-group ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+                        <li className={`list-group-item ${darkMode ? 'bg-secondary text-light' : 'bg-secondary text-dark'}`} aria-current="true">
                             <i className="bi bi-people-fill"></i> Online Collaborators ({currentUsers?.length})
                         </li>
                         {currentUsers?.map((user, index) => (
-                            <li key={index} className="list-group-item  bg-dark text-light">
+                            <li key={index} className={`list-group-item ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
                                 <i className="bi bi-person"></i>&nbsp;{user?.username} {user?.username === auth?.user?.username && '(You)'}
                             </li>
                         ))}
@@ -225,42 +247,42 @@ const EditDocument = () => {
                 </div>
             </div>
 
+            {/* Add Collaborator Modal */}
             <Modal title={"Add Collaborator"} modalId={"addCollaborator"} content={
                 <>
                     <div className='col-md-12'>
-                        <p className='lead text-xl'>Enter the email of the user you want to add as a collaborator</p>
+                        <p className={`lead text-xl ${darkMode ? 'text-light' : 'text-dark'}`}>Enter the email of the user you want to add as a collaborator</p>
                     </div>
                     <div className="mb-3 d-flex justify-content-end">
                         <input
                             type="text"
                             value={collaboratorEmail}
                             onChange={(e) => setCollaboratorEmail(e.target.value)}
-                            className="form-control"
-                            id="exampleFormControlInput1"
+                            className={`form-control ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}
                             placeholder={"Email"}
                         />
-                        <button type="button" className="btn btn-secondary ms-2" data-bs-dismiss="modal">Close</button>
+                        <button type="button" className={`btn btn-secondary ms-2 ${darkMode ? 'text-light' : ''}`} data-bs-dismiss="modal">Close</button>
                         <button onClick={handleAddCollaborator} type="button" className="btn btn-primary ms-2">Add Collaborator</button>
                     </div>
                 </>
             } />
 
+            {/* Collaborators Modal */}
             <Modal title={"Collaborators"} modalId={"collaborators"} content={
                 <>
-                    <ul className="list-group">
-                        <li className="list-group-item active" aria-current="true">
-                            <i className="bi bi-person-check-fill"></i>&nbsp;Collaborators
+                    <ul className={`list-group ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+                        <li className={`list-group-item ${darkMode ? 'bg-secondary text-light' : 'bg-primary text-dark'}`} aria-current="true">
+                            <i className="bi bi-person-check-fill"></i>&nbsp;Collaborators {collaborators?.length}
                         </li>
                         {collaborators?.map((user, index) => (
-                            <li key={index} className="list-group-item d-flex justify-content-between">
-                                <span><i className="bi bi-person"></i>&nbsp;{user?.email}</span>
+                            <li key={index} className={`list-group-item d-flex justify-content-between ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+                                <span><i className="bi bi-person"></i>&nbsp;{user?.username}</span>
                             </li>
                         ))}
                     </ul>
                 </>
             } />
-
-        </div >
+        </div>
     );
 };
 

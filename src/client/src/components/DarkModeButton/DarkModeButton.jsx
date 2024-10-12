@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styles from './DarkModeButton.module.css';
+import { useSupplier } from '../../context/supplierContext';
 
 const DarkModeButton = () => {
-  // Retrieve the saved theme preference from localStorage, default to 'light'
+  // Load the saved theme from localStorage or default to 'light'
   const savedTheme = localStorage.getItem('theme') || 'light';
-  // Set the initial state based on the saved theme
-  const [darkMode, setDarkMode] = useState(savedTheme === 'dark');
+  
+  // Destructure darkMode and setDarkMode from useSupplier hook
+  const { darkMode, setDarkMode } = useSupplier(savedTheme === 'dark');
 
   useEffect(() => {
     const htmlElement = document.documentElement;
 
-    // Update the data-bs-theme attribute based on the current theme
+    // Set the attribute for Bootstrap theme
     htmlElement.setAttribute('data-bs-theme', darkMode ? 'dark' : 'light');
 
-    // Update the body's classes based on the current theme
+    // Toggle body's classes for background and text colors
     if (darkMode) {
       document.body.classList.add('bg-dark', 'text-white');
       document.body.classList.remove('bg-light', 'text-dark');
@@ -24,7 +26,7 @@ const DarkModeButton = () => {
 
     // Save the current theme preference to localStorage
     localStorage.setItem('theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]); // Re-run effect when darkMode changes
+  }, [darkMode]);
 
   // Toggle the darkMode state
   const toggleDarkMode = () => {

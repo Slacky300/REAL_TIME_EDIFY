@@ -6,6 +6,7 @@ import Modal from '../../components/Modal';
 import { createNewDoc, deleteTheDoc, getAllLoggedInUserDocs } from '../../helpers/docs/doc.helper';
 import { toast } from 'react-toastify';
 import { useSupplier } from '../../context/supplierContext';
+import { useNavigate } from 'react-router-dom';
 
 const DocumentHome = () => {
 
@@ -13,6 +14,14 @@ const DocumentHome = () => {
     const [data, setData] = useState([{}]);
     const [title, setTitle] = useState('');
     const { loading, setLoading, shouldUpdate, triggerUpdate } = useSupplier();
+    const navigator = useNavigate();
+
+    useEffect(() => {
+        if(!auth?.token){
+            toast.error('Please Login to continue');
+            navigator('/');
+        }
+    }, [auth?.token]);
 
     useEffect(() => {
 

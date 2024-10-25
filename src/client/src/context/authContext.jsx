@@ -12,18 +12,32 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const data = getLocalStorageWithExpiry("auth");
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/users/me`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${data?.token}`
+          }
 
-    if (data) {
-       
-        setAuth(prevAuth => ({
-            ...prevAuth,
-            user: data.user,
+        });
+
+        const result = await res.json();
+        if (res.status === 200) {
+          setAuth({
+            user: result.user,
             token: data.token
-        }));
-
-
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
-}, []);
+    if (data) {
+      fetchUser();
+    }
+  }, []);
 
 
 

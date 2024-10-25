@@ -12,7 +12,7 @@ const EditDocument = () => {
     const [currentUsers, setCurrentUsers] = useState([]);
     const [collaboratorEmail, setCollaboratorEmail] = useState('');
     const [collaborators, setCollaborators] = useState([]);
-    const [isModified, setIsModified] = useState(false);  // State to track document modifications
+    const [isModified, setIsModified] = useState(false);
 
     const navigate = useNavigate();
     const { auth } = useAuth();
@@ -125,26 +125,26 @@ const EditDocument = () => {
         if (auth?.token && currentDoc?._id) {
             fetchCollaborators();
         }
-    }, [auth, currentDoc, setCurrentDoc]);
+    }, [auth, currentDoc]);
 
     useEffect(() => {
         if (!quill || !currentDoc?._id) return;
-    
+
         const handler = (delta, oldDelta, source) => {
             if (source !== 'user') return;
-            
+
             socket.emit('send-changes', { delta, roomId: currentDoc?._id, username: auth?.user?.username });
         };
-    
+
         quill.on('text-change', handler);
-    
+
         return () => {
             if (quill) {
-                quill.off('text-change', handler);  // Remove event listener using reference
+                quill.off('text-change', handler);
             }
         };
     }, [quill, socket, currentDoc, auth?.user?.username]);
-    
+
 
     useEffect(() => {
         if (quill == null || !currentDoc?._id) return;
@@ -185,7 +185,7 @@ const EditDocument = () => {
 
     useEffect(() => {
         socket.on('receive-changes', (data) => {
-            if(data?.username === auth?.user?.username) return;
+            if (data?.username === auth?.user?.username) return;
             quill.updateContents(data?.delta);
         });
 
@@ -194,45 +194,28 @@ const EditDocument = () => {
         };
     }, [currentDoc, socket]);
 
+
+
     return (
-        <div className={`container my-4 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-            <div className='row d-flex justify-content-center align-items-center'>
-                <div className='my-3 col-lg-10 col-xl-8 d-flex justify-content-between align-items-center'>
-                    <div className='d-flex align-items-center'>
-                        <button type="button" className={`btn btn-warning me-2 ${darkMode ? 'text-light' : ''}`} onClick={() =>{
-                            saveDocumentImmediately();
-                            navigate('/home');
-                        }}>
-                            <i className="bi bi-arrow-left"></i>
-                        </button>
-                    </div>
-                    <div className='d-flex align-items-center'>
-                        <h1 className={`display-6 text-center ${darkMode ? 'text-light' : 'text-dark'}`}>
-                            Document Title: <u> {currentDoc?.title}</u>
-                            <button
-                                type="button"
-                                className='btn btn-secondary ms-5'
-                                data-bs-toggle="modal"
-                                data-bs-target={`#${"collaborators"}`}
-                            >
-                                <i className="bi bi-eye-fill"></i>
-                            </button>
-                        </h1>
-                    </div>
-                    <div className='d-flex align-items-center'>
+        <div className={`container-fluid ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'} vh-100`}>
+            <div className="row h-100">
+                {/* Sidebar - collapses on smaller screens */}
+                <div className={`col-lg-3 col-md-4 col-12 p-3 ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`} style={{ minWidth: '280px' }}>
+                    <div className="d-flex align-items-center justify-content-between mb-4">
+                        <h4 className="fw-bold">Collaborators</h4>
                         <button
                             type="button"
-                            className="btn btn-primary me-2"
+                            className="btn btn-sm btn-primary"
                             data-bs-toggle="modal"
-                            data-bs-target={`#${"addCollaborator"}`}
+                            data-bs-target="#addCollaborator"
                         >
-                            <i className="bi bi-person-fill-add"></i>&nbsp;Add Collaborator
+                            <i className="bi bi-person-fill-add"></i> Add
                         </button>
                     </div>
-                </div>
-                <div className='col-md-12 col-lg-2 col-xl-4 mb-4'>
-                    <ul className={`list-group ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-                        <li className={`list-group-item ${darkMode ? 'bg-secondary text-light' : 'bg-secondary text-dark'}`} aria-current="true">
+                    
+                    {/* Online Collaborators List */}
+                    <ul className="list-group mb-4">
+                        <li className={`list-group-item ${darkMode ? 'bg-dark text-light' : 'bg-secondary text-dark'}`}>
                             <i className="bi bi-people-fill"></i> Online Collaborators ({currentUsers?.length})
                         </li>
                         {currentUsers?.map((user, index) => (
@@ -241,49 +224,98 @@ const EditDocument = () => {
                             </li>
                         ))}
                     </ul>
-                </div>
-                <div className='col-md-12 col-lg-10 col-xl-8'>
-                    <Editor />
-                </div>
-            </div>
 
-            {/* Add Collaborator Modal */}
-            <Modal title={"Add Collaborator"} modalId={"addCollaborator"} content={
-                <>
-                    <div className='col-md-12'>
-                        <p className={`lead text-xl ${darkMode ? 'text-light' : 'text-dark'}`}>Enter the email of the user you want to add as a collaborator</p>
-                    </div>
-                    <div className="mb-3 d-flex justify-content-end">
-                        <input
-                            type="text"
-                            value={collaboratorEmail}
-                            onChange={(e) => setCollaboratorEmail(e.target.value)}
-                            className={`form-control ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}
-                            placeholder={"Email"}
-                        />
-                        <button type="button" className={`btn btn-secondary ms-2 ${darkMode ? 'text-light' : ''}`} data-bs-dismiss="modal">Close</button>
-                        <button onClick={handleAddCollaborator} type="button" className="btn btn-primary ms-2">Add Collaborator</button>
-                    </div>
-                </>
-            } />
-
-            {/* Collaborators Modal */}
-            <Modal title={"Collaborators"} modalId={"collaborators"} content={
-                <>
-                    <ul className={`list-group ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-                        <li className={`list-group-item ${darkMode ? 'bg-secondary text-light' : 'bg-primary text-dark'}`} aria-current="true">
-                            <i className="bi bi-person-check-fill"></i>&nbsp;Collaborators {collaborators?.length}
+                    {/* Available Collaborators List */}
+                    <ul className="list-group">
+                        <li className={`list-group-item ${darkMode ? 'bg-dark text-light' : 'bg-primary text-dark'}`}>
+                            <i className="bi bi-person-check-fill"></i> All Collaborators ({collaborators?.length})
                         </li>
                         {collaborators?.map((user, index) => (
-                            <li key={index} className={`list-group-item d-flex justify-content-between ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
-                                <span><i className="bi bi-person"></i>&nbsp;{user?.username}</span>
+                            <li key={index} className={`list-group-item ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+                                <i className="bi bi-person"></i>&nbsp;{user?.username}
                             </li>
                         ))}
                     </ul>
-                </>
-            } />
+                </div>
+
+                {/* Main Editor Container - expands on smaller screens */}
+                <div className="col-lg-9 col-md-8 col-12 p-4">
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+                        {/* Back Button */}
+                        <button
+                            type="button"
+                            className={`btn btn-warning mb-2 mb-md-0 ${darkMode ? 'text-light' : ''}`}
+                            onClick={() => {
+                                saveDocumentImmediately();
+                                navigate('/home');
+                            }}
+                        >
+                            <i className="bi bi-arrow-left"></i> Back
+                        </button>
+                        
+                        {/* Document Title */}
+                        <h1 className={`display-6 text-center ${darkMode ? 'text-light' : 'text-dark'} mb-2 mb-md-0`}>
+                            Document Title: <u>{currentDoc?.title}</u>
+                        </h1>
+
+                        {/* View Collaborators Button */}
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#collaborators"
+                        >
+                            <i className="bi bi-eye-fill"></i> View Collaborators
+                        </button>
+                    </div>
+
+                    {/* Quill Editor */}
+                    <div className="editor-container border rounded p-3" style={{ minHeight: '60vh' }}>
+                        <Editor />
+                    </div>
+                </div>
+            </div>
+
+            {/* Modals */}
+            <Modal
+                title="Add Collaborator"
+                modalId="addCollaborator"
+                content={
+                    <>
+                        <p className={`lead ${darkMode ? 'text-light' : 'text-dark'}`}>
+                            Enter the email of the user you want to add as a collaborator
+                        </p>
+                        <div className="input-group">
+                            <input
+                                type="email"
+                                value={collaboratorEmail}
+                                onChange={(e) => setCollaboratorEmail(e.target.value)}
+                                className={`form-control ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}
+                                placeholder="Email"
+                            />
+                            <button className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button className="btn btn-primary" onClick={handleAddCollaborator}>Add</button>
+                        </div>
+                    </>
+                }
+            />
+
+            <Modal
+                title="Collaborators"
+                modalId="collaborators"
+                content={
+                    <ul className={`list-group ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+                        {collaborators?.map((user, index) => (
+                            <li key={index} className={`list-group-item ${darkMode ? 'bg-dark text-light' : 'bg-light text-dark'}`}>
+                                <i className="bi bi-person"></i>&nbsp;{user?.username}
+                            </li>
+                        ))}
+                    </ul>
+                }
+            />
         </div>
     );
+
 };
 
 export default EditDocument;

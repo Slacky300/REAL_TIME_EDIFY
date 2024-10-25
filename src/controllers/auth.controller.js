@@ -5,6 +5,15 @@ import {sendVerificationEmail, generateverificationToken} from "../utils/email.j
 import {successFullVerification} from "../utils/emailTemplate.js"
 
 
+export const me = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        res.status(200).json({user});
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 export const register = async (req, res) => {
 
     try{

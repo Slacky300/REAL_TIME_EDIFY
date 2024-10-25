@@ -17,11 +17,11 @@ const DocumentHome = () => {
     const navigator = useNavigate();
 
     useEffect(() => {
-        if(!auth?.token){
+        if (!auth) {
             toast.error('Please Login to continue');
             navigator('/');
         }
-    }, [auth?.token]);
+    }, [auth]);
 
     useEffect(() => {
 
@@ -82,44 +82,72 @@ const DocumentHome = () => {
 
     return (
         <>
-            <div className='container my-3'>
-                <div className='row ms-4 d-flex justify-content-center'>
-                    <h1 className='lead display-5 justify-content-space-between'>Hello {auth?.user?.username} 👋 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#${"createDoc"}`}>
-                        Create New
-                    </button> </h1>
-
-
-                    <p className='lead display-6'>Welcome to your document home page</p>
+            <div className="container my-4">
+                <div className="row d-flex align-items-center justify-content-between px-3">
+                    {/* Greeting Section */}
+                    <div className="col-12 col-md-8">
+                        <h1 className="display-5 text-primary">
+                            Hello {auth?.user?.username} 👋
+                        </h1>
+                        <p className="lead">
+                            Welcome to your document home page
+                        </p>
+                    </div>
+                    {/* Create New Button */}
+                    <div className="col-12 col-md-4 d-flex justify-content-md-end mt-3 mt-md-0">
+                        <button
+                            type="button"
+                            className="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createDoc"
+                        >
+                            <i className="bi bi-plus-circle-fill me-2"></i>Create New
+                        </button>
+                    </div>
                 </div>
-                <div className='row d-flex justify-content-center align-items-center'>
 
-                    {!loading ? (data?.map((cardData, index) => {
-                        return (
-                            <div key={index} className='col-md-4 my-3 d-flex justify-content-center align-items-center'>
-                                <Card cardData={cardData}  deleteEvent={handleDelete}/>
+                {/* Cards Section */}
+                <div className="row my-4 d-flex justify-content-center">
+                    {!loading ? (
+                        data?.map((cardData, index) => (
+                            <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3 my-3 d-flex justify-content-center">
+                                <Card cardData={cardData} deleteEvent={handleDelete} />
                             </div>
-                        )
-                    })) : (<Loader />)}
+                        ))
+                    ) : (
+                        <Loader />
+                    )}
                 </div>
+
+                {/* Create New Document Modal */}
+                <Modal
+                    title="Create New Document"
+                    modalId="createDoc"
+                    content={
+                        <form className="form-control bg-light p-4" onSubmit={handleAdd}>
+                            <div className="mb-3">
+                                <label htmlFor="title" className="form-label">
+                                    Title
+                                </label>
+                                <input
+                                    type="text"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="form-control"
+                                    id="title"
+                                    placeholder="Document Title"
+                                    required
+                                />
+                            </div>
+                            <div className="d-flex justify-content-end">
+                                <button type="submit" disabled={loading} className="btn btn-primary">
+                                    {loading ? "Creating..." : "Create"}
+                                </button>
+                            </div>
+                        </form>
+                    }
+                />
             </div>
-
-            <Modal title={"Create New Document"} modalId={"createDoc"} content={
-                <form className='form-control bg-dark text-light' onSubmit={handleAdd}>
-                    <div className="mb-3">
-                        
-                        <label htmlFor="title" className="htmlForm-label my-2">Title</label>
-                        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="form-control" id="title" placeholder={"Document Title"} />
-
-                    </div>
-
-                    <div className="mb-3 d-flex justify-content-end">
-
-                        <button type="submit" disabled={loading} className="btn btn-primary">{loading ? "Creating" : "Create"}</button>
-
-                    </div>
-                </form>
-            } />
-
         </>
     )
 }

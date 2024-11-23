@@ -15,39 +15,41 @@ const Card = ({ cardData, deleteEvent }) => {
     return (
         <>
             {cardData?.title && (
-                <div className={`card ${cardBgClass} shadow-sm`} style={{ maxWidth: '20rem' }}>
-                    <div className="card-body">
-                        {/* Card Title and Metadata */}
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h5 className={`card-title ${cardTitleClass} mb-0`}>{cardData?.title}</h5>
-                            <small className={textMutedClass}>
-                                {new Date(cardData?.createdAt).toLocaleDateString()}
-                            </small>
-                        </div>
-                        <p className={`${textMutedClass} mb-2`}>Owner: {cardData?.owner?.username}</p>
-                        {/* Preview Text */}
-                        <p className="card-text mb-4">
-                            {cardData?.content?.ops[0]?.insert?.slice(0, 50) || ''}
-                            {cardData?.content?.ops[0]?.insert?.length > 50 ? '...' : ''}
-                        </p>
-                        {/* Action Buttons */}
-                        <div className="d-flex justify-content-between">
-                            <button
-                                className={`btn btn-outline-danger`}
-                                data-bs-toggle="modal"
-                                data-bs-target={`#deleteDoc${cardData?._id}`}
-                            >
-                                <i className="bi bi-trash3-fill me-2"></i>Delete
-                            </button>
-                            <button
-                                onClick={() => {
-                                    navigate(`/edit/${cardData._id}`);
-                                    setCurrentDoc(cardData);
-                                }}
-                                className={`btn btn-outline-success`}
-                            >
-                                <i className="bi bi-pencil-square me-2"></i>Edit
-                            </button>
+                <div className={`col-12`}>
+                    <div className={`card ${cardBgClass} shadow-sm  h-100`}>
+                        <div className="card-body d-flex flex-column">
+                            {/* Card Title and Metadata */}
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h5 className={`card-title ${cardTitleClass} mb-0`}>{cardData?.title}</h5>
+                                <small className={textMutedClass}>
+                                    {new Date(cardData?.createdAt).toLocaleDateString()}
+                                </small>
+                            </div>
+                            <p className={`${textMutedClass} mb-2`}>Owner: {cardData?.owner?.username}</p>
+                            {/* Preview Text */}
+                            <p className="card-text mb-4">
+                                {cardData?.content?.ops[0]?.insert?.slice(0, 50) || ''}
+                                {cardData?.content?.ops[0]?.insert?.length > 50 ? '...' : ''}
+                            </p>
+                            {/* Action Buttons */}
+                            <div className="d-flex justify-content-between mt-auto">
+                                <button
+                                    className={`btn btn-outline-danger`}
+                                    data-bs-toggle="modal"
+                                    data-bs-target={`#deleteDoc${cardData?._id}`}
+                                >
+                                    <i className="bi bi-trash3-fill me-2"></i>Delete
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate(`/edit/${cardData._id}`);
+                                        setCurrentDoc(cardData);
+                                    }}
+                                    className={`btn btn-outline-success`}
+                                >
+                                    <i className="bi bi-pencil-square me-2"></i>Edit
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -3,9 +3,9 @@
 RealTimeEdify is a real-time collaborative document editing web application built using the MERN stack (MongoDB, Express.js, React, Node.js), Socket.IO for real-time communication, and Quill as the text editor.
 
 ## Screenshots:
-![image](https://github.com/Slacky300/REAL_TIME_DOCUMENT_COLLAB/assets/98531038/ccc71196-ef17-4e6b-a009-6890ccf29801)
-![image](https://github.com/Slacky300/REAL_TIME_DOCUMENT_COLLAB/assets/98531038/8ed42342-12ac-484c-9de8-a5e4497f565c)
-![image](https://github.com/Slacky300/REAL_TIME_DOCUMENT_COLLAB/assets/98531038/f6b69a9b-7e5f-4211-87f6-016e766ab8ec)
+![image](https://github.com/user-attachments/assets/adcf343e-4cd4-409e-b194-c9ec7a3be3ac)
+![image](https://github.com/user-attachments/assets/b8332eb8-373b-4ef8-ba70-d576cab97919)
+![image](https://github.com/user-attachments/assets/1a759dce-e026-4a16-8f93-13bce44c99e8)
 
 
 ## Features

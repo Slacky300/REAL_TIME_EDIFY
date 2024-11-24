@@ -4,7 +4,7 @@ RealTimeEdify is a real-time collaborative document editing web application buil
 
 ## Screenshots:
 ![image](https://github.com/user-attachments/assets/adcf343e-4cd4-409e-b194-c9ec7a3be3ac)
-![image](https://github.com/user-attachments/assets/b8332eb8-373b-4ef8-ba70-d576cab97919)
+![image](https://github.com/user-attachments/assets/808859f8-d3a0-40af-80aa-dff6e978a5c1)
 ![image](https://github.com/user-attachments/assets/1a759dce-e026-4a16-8f93-13bce44c99e8)
 
 
